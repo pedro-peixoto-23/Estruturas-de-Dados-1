@@ -55,7 +55,7 @@ int main() {
                 if (qtd_empregados == 0) {
                     vetor_empregados = malloc(sizeof(Empregado));
                 } else {
-                    vetor_empregados = (Empregado*) realloc(vetor_empregados, qtd_empregados * sizeof(Empregado));
+                    vetor_empregados = (Empregado*) realloc(vetor_empregados, (qtd_empregados + 1) * sizeof(Empregado));
                 }
                 if (vetor_empregados == NULL) {
                     printf("Houve um problema com a alocacao!");

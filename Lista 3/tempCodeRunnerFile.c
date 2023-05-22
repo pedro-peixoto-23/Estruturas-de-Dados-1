@@ -1,1 +1,1 @@
-    getchar();
+qtd_empregados + 1
