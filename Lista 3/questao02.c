@@ -1,15 +1,13 @@
 /*
-    * Função: 
+    * Função: Criar um vetor que armazena empregados usando alocação dinâmica e structs. Além de permitir apagar, 
+              inserir e apresentar todos os empregados.
     * Autor: Pedro Peixoto Viana de Oliveira
     * Data: 22/maio/2023
     * Observações: 
+        - Foi utilizado o realloc para tornar o array dinâmico, podendo aumentar e diminuir ao decorrer da aplicação,
+          dependendo de quantos empregados o usuário insira ou retire.
+        - Foi criado um painel no terminal para uma boa iteratividade com o usuário.
 */
-
-// Defina um registro (estrutura - struct) empregado para armazenar os dados (nome, data de
-// nascimento, RG, data de admissão e salário) de um empregado de uma empresa. Criar um
-// novo tipo de dados chamado Empregado usando a estrutura empregado. Defina um vetor
-// de empregados (usando alocação dinâmica) para armazenar todos os empregados de sua
-// empresa. Implementar rotinas para ler, escrever e excluir registros deste tipo.
 
 
 #include <stdio.h>
@@ -34,12 +32,15 @@ typedef struct empregado {
 void imprimir_quadro_opcoes();
 void ler_empregado(Empregado* empregado, int qtd_empregados);
 void imprimir_empregados(Empregado* empregados, int qtd_empregados);
+void retirarEmpregadoPorIndice(Empregado* empregados, int qtd_empregados);
+void imprimirErro(char* mensagem);
 
 int main() {
     
     Empregado* vetor_empregados;
     int qtd_empregados = 0;
-    while (1) {
+    int sair_loop = 0;
+    while (sair_loop == 0) {
         imprimir_quadro_opcoes();
 
         int escolha_usuario;
@@ -58,7 +59,7 @@ int main() {
                     vetor_empregados = (Empregado*) realloc(vetor_empregados, (qtd_empregados + 1) * sizeof(Empregado));
                 }
                 if (vetor_empregados == NULL) {
-                    printf("Houve um problema com a alocacao!");
+                    imprimirErro("Houve um problema com a alocacao!");
                 } else {
                     qtd_empregados += 1;
                     ler_empregado(vetor_empregados, qtd_empregados);
@@ -67,18 +68,33 @@ int main() {
 
             case 2:
                 if (qtd_empregados == 0) {
-                    printf("\nAinda nao foram inseridos empregados!\n");
+                    imprimirErro("Ainda nao foram inseridos empregados!");
                 } else {
                     imprimir_empregados(vetor_empregados, qtd_empregados);
                 }
-            break;
+                break;
+
+            case 3:
+                if (qtd_empregados == 0) {
+                    imprimirErro("Ainda nao foram inseridos empregados!");
+                } else {
+                    retirarEmpregadoPorIndice(vetor_empregados, qtd_empregados);
+                    vetor_empregados = (Empregado*) realloc(vetor_empregados, (qtd_empregados - 1) * sizeof(Empregado));
+                    qtd_empregados -= 1;
+                }
+                break;
+
+            case 4:
+                sair_loop = 1;
+                break;
+
             default:
+                imprimirErro("Inserir numeros apenas entre 1 e 4!");
                 break;
         }
     }
     
     free(vetor_empregados);
-
 
     return 0;
 }
@@ -124,9 +140,14 @@ void ler_empregado(Empregado* empregado, int qtd_empregados) {
     
     printf("- Insira o salario do empregado: ");
     scanf(" %f", &empregado[indice].salario);
+    
+    printf("----------------\n");
+
+    imprimirErro("Empregado inserido com sucesso!");
 }
 
 void imprimir_empregados(Empregado* empregados, int qtd_empregados) {
+    printf("--------------- IMPRIMINDO EMPREGADOS ---------------\n");
     for (int i = 0; i < qtd_empregados; i++) {
         printf("\n----- Empregado indice %d -----\n", i);
         printf("- Nome: %s\n", empregados[i].nome);
@@ -136,4 +157,39 @@ void imprimir_empregados(Empregado* empregados, int qtd_empregados) {
         printf("- Salario: %.2f\n", empregados[i].salario);
         printf("----------------------\n");
     }
+    printf("-----------------------------------------------------\n");
+}
+
+void retirarEmpregadoPorIndice(Empregado* empregados, int qtd_empregados) {
+    int indice_remocao;
+
+    do {
+        printf("- Insira o indice do empregado que deseja remover: ");
+        scanf(" %d", &indice_remocao);
+
+        if ((indice_remocao > (qtd_empregados - 1)) || (indice_remocao < 0)) {
+            printf("TENTE NOVAMENTE: insira apenas valores de 0 ate %d\n", qtd_empregados - 1);
+        } else {
+            imprimirErro("O empregado foi removido com sucesso! Consulte se isso realmente aconteceu imprimindo os empregados!");
+
+            break;
+        }
+    } while (1);
+
+    int indice_vazio = indice_remocao;
+    int indice_proximo_vazio = indice_vazio + 1;
+    // se chegou no fim da lista, ou seja, os outros elementos ocuparam o lugar dele, e se for o último elemento que vai
+    // ser apagado, não será apagado, mas quando o realloc for usado na função main, ele vai sair automaticamente, mesmo
+    // acontece caso seja um único elemento na lista, já que o realloc vai retirar ele automaticamente no main 
+    while (indice_vazio < (qtd_empregados - 1)) {
+        empregados[indice_vazio] = empregados[indice_proximo_vazio];
+        indice_vazio = indice_proximo_vazio;
+        indice_proximo_vazio += 1;
+    }
+}
+
+void imprimirErro(char* mensagem) {
+    printf("-----------------------------------------\n");
+    printf("| %s\n", mensagem);
+    printf("-----------------------------------------\n");
 }
