@@ -26,19 +26,19 @@ typedef struct empregado {
     char rg[7];
     Data data_admissao;
     float salario;
-
 } Empregado;
 
 void imprimir_quadro_opcoes();
 void ler_empregado(Empregado* empregado, int qtd_empregados);
 void imprimir_empregados(Empregado* empregados, int qtd_empregados);
 void retirarEmpregadoPorIndice(Empregado* empregados, int qtd_empregados);
-void imprimirErro(char* mensagem);
+void imprimirAlarmeFormatado(char* mensagem);
 
 int main() {
     
     Empregado* vetor_empregados;
     int qtd_empregados = 0;
+
     int sair_loop = 0;
     while (sair_loop == 0) {
         imprimir_quadro_opcoes();
@@ -46,10 +46,6 @@ int main() {
         int escolha_usuario;
         printf("Insira sua resposta: ");
         scanf(" %d", &escolha_usuario);
-
-        if (escolha_usuario == 4) {
-            break;
-        }
 
         switch (escolha_usuario) {
             case 1:
@@ -59,7 +55,7 @@ int main() {
                     vetor_empregados = (Empregado*) realloc(vetor_empregados, (qtd_empregados + 1) * sizeof(Empregado));
                 }
                 if (vetor_empregados == NULL) {
-                    imprimirErro("Houve um problema com a alocacao!");
+                    imprimirAlarmeFormatado("Houve um problema com a alocacao!");
                 } else {
                     qtd_empregados += 1;
                     ler_empregado(vetor_empregados, qtd_empregados);
@@ -68,7 +64,7 @@ int main() {
 
             case 2:
                 if (qtd_empregados == 0) {
-                    imprimirErro("Ainda nao foram inseridos empregados!");
+                    imprimirAlarmeFormatado("Ainda nao foram inseridos empregados!");
                 } else {
                     imprimir_empregados(vetor_empregados, qtd_empregados);
                 }
@@ -76,7 +72,7 @@ int main() {
 
             case 3:
                 if (qtd_empregados == 0) {
-                    imprimirErro("Ainda nao foram inseridos empregados!");
+                    imprimirAlarmeFormatado("Ainda nao foram inseridos empregados!");
                 } else {
                     retirarEmpregadoPorIndice(vetor_empregados, qtd_empregados);
                     vetor_empregados = (Empregado*) realloc(vetor_empregados, (qtd_empregados - 1) * sizeof(Empregado));
@@ -85,11 +81,12 @@ int main() {
                 break;
 
             case 4:
+                imprimirAlarmeFormatado("Execucao terminada com sucesso!");
                 sair_loop = 1;
                 break;
 
             default:
-                imprimirErro("Inserir numeros apenas entre 1 e 4!");
+                imprimirAlarmeFormatado("Inserir numeros apenas entre 1 e 4!");
                 break;
         }
     }
@@ -143,7 +140,7 @@ void ler_empregado(Empregado* empregado, int qtd_empregados) {
     
     printf("----------------\n");
 
-    imprimirErro("Empregado inserido com sucesso!");
+    imprimirAlarmeFormatado("Empregado inserido com sucesso!");
 }
 
 void imprimir_empregados(Empregado* empregados, int qtd_empregados) {
@@ -170,7 +167,7 @@ void retirarEmpregadoPorIndice(Empregado* empregados, int qtd_empregados) {
         if ((indice_remocao > (qtd_empregados - 1)) || (indice_remocao < 0)) {
             printf("TENTE NOVAMENTE: insira apenas valores de 0 ate %d\n", qtd_empregados - 1);
         } else {
-            imprimirErro("O empregado foi removido com sucesso! Consulte se isso realmente aconteceu imprimindo os empregados!");
+            imprimirAlarmeFormatado("O empregado foi removido com sucesso! Consulte se isso realmente aconteceu imprimindo os empregados!");
 
             break;
         }
@@ -188,7 +185,7 @@ void retirarEmpregadoPorIndice(Empregado* empregados, int qtd_empregados) {
     }
 }
 
-void imprimirErro(char* mensagem) {
+void imprimirAlarmeFormatado(char* mensagem) {
     printf("-----------------------------------------\n");
     printf("| %s\n", mensagem);
     printf("-----------------------------------------\n");
