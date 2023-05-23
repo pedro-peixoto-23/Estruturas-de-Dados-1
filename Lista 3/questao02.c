@@ -48,12 +48,16 @@ int main() {
         scanf(" %d", &escolha_usuario);
 
         switch (escolha_usuario) {
+            // Caso o usuário escolha inserir um novo empregado
             case 1:
+                // Se não tiver empregados, criar apenas um espaço no array e caso não esteja vazia, realocar os dados 
+                // anteriores para o novo empregado
                 if (qtd_empregados == 0) {
                     vetor_empregados = malloc(sizeof(Empregado));
                 } else {
                     vetor_empregados = (Empregado*) realloc(vetor_empregados, (qtd_empregados + 1) * sizeof(Empregado));
                 }
+                // Verificando se a alocação foi bem sucedida
                 if (vetor_empregados == NULL) {
                     imprimirAlarmeFormatado("Houve um problema com a alocacao!");
                 } else {
@@ -62,6 +66,7 @@ int main() {
                 }
                 break;
 
+            // Caso o usuário escolha mostrar todos os empregados
             case 2:
                 if (qtd_empregados == 0) {
                     imprimirAlarmeFormatado("Ainda nao foram inseridos empregados!");
@@ -70,6 +75,7 @@ int main() {
                 }
                 break;
 
+            // Caso o usuário escolha remover algum empregado
             case 3:
                 if (qtd_empregados == 0) {
                     imprimirAlarmeFormatado("Ainda nao foram inseridos empregados!");
@@ -80,6 +86,7 @@ int main() {
                 }
                 break;
 
+            // Caso o usuário escolha terminar a execução do programa
             case 4:
                 imprimirAlarmeFormatado("Execucao terminada com sucesso!");
                 sair_loop = 1;
@@ -119,7 +126,8 @@ void ler_empregado(Empregado* empregado, int qtd_empregados) {
 
     printf("- Insira o nome do empregado: ");
     fgets(empregado[indice].nome, 50, stdin);
-    // apenas retirando o \n da string (usando o strcspn para ver o índice do \n e modificando por \0 para a string finalizar onde antes era o \n)
+    // apenas retirando o \n da string (usando o strcspn para ver o índice do \n e modificando por \0 para a string 
+    // finalizar onde antes era o \n)
     empregado[indice].nome[strcspn(empregado[indice].nome, "\n")] = '\0'; 
 
     printf("- Insira a data de nascimento (separado por espaco, dia mes ano) do empregado: ");
@@ -129,6 +137,8 @@ void ler_empregado(Empregado* empregado, int qtd_empregados) {
     
     printf("- Insira o rg do empregado: ");
     fgets(empregado[indice].rg, 7, stdin);
+    // apenas retirando o \n, como fez no nome
+    empregado[indice].rg[strcspn(empregado[indice].rg, "\n")] = '\0';
 
     getchar();
 
