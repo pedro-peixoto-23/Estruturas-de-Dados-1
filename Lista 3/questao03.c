@@ -1,10 +1,14 @@
 /*
-    * Função: 
+    * Função: Criar um vetor de ponteiros para estruturas do tipo Aeroporto e criar rotinas (ler, escrever e excluir).
     * Autor: Pedro Peixoto Viana de Oliveira
     * Data: 22/maio/2023
-    * Observações: Na questão 2, foi utilizado apenas um vetor que armazena estruturas. Nesse código, foi usado um vetor de ponteiros para
-                   estruturas, um pouco diferente, por isso foi usado "vetor**", que indica um vetor bidimensional ou apenas um vetor de 
-                   ponteiros.
+    * Observações: 
+            - Na questão 2, foi utilizado apenas um vetor que armazena estruturas. Nesse código, foi usado um vetor de ponteiros para
+              estruturas, um pouco diferente, por isso foi usado "vetor**", que indica um vetor bidimensional ou apenas um vetor de 
+              ponteiros.
+            - Foi utilizado o realloc para tornar o array dinâmico, podendo aumentar e diminuir ao decorrer da aplicação,
+              dependendo de quantos empregados o usuário insira ou retire.
+            - Foi criado um painel no terminal para uma boa iteratividade com o usuário.
 */
 
 
@@ -28,6 +32,7 @@ void retirarAeroportoPorIndice(Aeroporto** aeroportos, int qtd_aeroportos);
 void imprimirAlarmeFormatado(char* mensagem);
 // Essa função foi desenvolvida porque existem fgets aninhados na função lerAeroporto
 void limparCaracteresQuePassaramNoFgets(char* string_do_fgets);
+
 
 int main() {
     
@@ -89,6 +94,8 @@ int main() {
                 break;
 
             case 4:
+                imprimirAlarmeFormatado("Execucao terminada com sucesso!");
+                sair_loop = 1;
                 break;
 
             default:

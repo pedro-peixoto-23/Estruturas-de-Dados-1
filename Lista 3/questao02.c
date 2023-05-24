@@ -1,6 +1,6 @@
 /*
-    * Função: Criar um vetor que armazena empregados usando alocação dinâmica e structs. Além de permitir apagar, 
-              inserir e apresentar todos os empregados.
+    * Função: Criar um vetor que armazena estruturas do tipo Empregado usando alocação dinâmica. Além de criar rotinas para ler, escrever e 
+              excluir esses registros.
     * Autor: Pedro Peixoto Viana de Oliveira
     * Data: 22/maio/2023
     * Observações: 
@@ -33,6 +33,9 @@ void lerEmpregado(Empregado* empregado, int qtd_empregados);
 void imprimirEmpregados(Empregado* empregados, int qtd_empregados);
 void retirarEmpregadoPorIndice(Empregado* empregados, int qtd_empregados);
 void imprimirAlarmeFormatado(char* mensagem);
+// Essa função foi desenvolvida porque existem fgets aninhados na função lerAeroporto
+void limparCaracteresQuePassaramNoFgets(char* string_do_fgets);
+
 
 int main() {
     
@@ -126,21 +129,19 @@ void lerEmpregado(Empregado* empregado, int qtd_empregados) {
 
     printf("- Insira o nome do empregado: ");
     fgets(empregado[indice].nome, sizeof(empregado[indice].nome), stdin);
-    // apenas retirando o \n da string (usando o strcspn para ver o índice do \n e modificando por \0 para a string 
+    limparCaracteresQuePassaramNoFgets(empregado[indice].nome);
+    // Apenas retirando o \n da string (usando o strcspn para ver o índice do \n e modificando por \0 para a string 
     // finalizar onde antes era o \n)
-    empregado[indice].nome[strcspn(empregado[indice].nome, "\n")] = '\0'; 
-
-    printf("- Insira a data de nascimento (separado por espaco, dia mes ano) do empregado: ");
-    scanf(" %d %d %d", &empregado[indice].data_nascimento.dia, &empregado[indice].data_nascimento.mes, &empregado[indice].data_nascimento.ano);
-
-    getchar();
+    empregado[indice].nome[strcspn(empregado[indice].nome, "\n")] = '\0';
     
     printf("- Insira o rg do empregado: ");
     fgets(empregado[indice].rg, sizeof(empregado[indice].rg), stdin);
-    // apenas retirando o \n, como fez no nome
+    limparCaracteresQuePassaramNoFgets(empregado[indice].rg);
+    // Apenas retirando o \n, como fez no nome
     empregado[indice].rg[strcspn(empregado[indice].rg, "\n")] = '\0';
 
-    getchar();
+    printf("- Insira a data de nascimento (separado por espaco, dia mes ano) do empregado: ");
+    scanf(" %d %d %d", &empregado[indice].data_nascimento.dia, &empregado[indice].data_nascimento.mes, &empregado[indice].data_nascimento.ano);
 
     printf("- Insira a data de admissao (separado por espaco, dia mes ano) do empregado: ");
     scanf(" %d %d %d", &empregado[indice].data_admissao.dia, &empregado[indice].data_admissao.mes, &empregado[indice].data_admissao.ano);
@@ -199,4 +200,14 @@ void imprimirAlarmeFormatado(char* mensagem) {
     printf("-----------------------------------------\n");
     printf("| %s\n", mensagem);
     printf("-----------------------------------------\n");
+}
+
+void limparCaracteresQuePassaramNoFgets(char* string_do_fgets) {
+    // A função strchr retorna NULL caso não exista um caractere informado
+    // Então é verificado se a string possui o '\n', caso não possua, significa que sobrou caracteres no buffers de entrada
+    // Sabendo disso, é criado uma rotina para retirar esses caracteres até chegar no '\n', que significa o final dos carac-
+    // teres que passaram no fgets.
+    if (strchr(string_do_fgets, '\n') == NULL) {
+        while (getchar() != '\n') {}
+    }
 }
