@@ -99,6 +99,7 @@ int main() {
                 break;
 
             default:
+                imprimirAlarmeFormatado("Inserir numeros apenas entre 1 e 4!");
                 break;
         }
     }
