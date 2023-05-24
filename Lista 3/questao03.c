@@ -2,22 +2,10 @@
     * Função: 
     * Autor: Pedro Peixoto Viana de Oliveira
     * Data: 22/maio/2023
-    * Observações: Na questão 2, foi utilizado apenas um vetor que armazena estruturas. Nesse código foi usado um vetor de ponteiros para estruturas, um pouco diferente, por isso foi usado "vetor**", que indica um vetor bidimensional ou apenas um vetor de ponteiros.
+    * Observações: Na questão 2, foi utilizado apenas um vetor que armazena estruturas. Nesse código, foi usado um vetor de ponteiros para
+                   estruturas, um pouco diferente, por isso foi usado "vetor**", que indica um vetor bidimensional ou apenas um vetor de 
+                   ponteiros.
 */
-
-// 3. Suponha que uma empresa aérea mantém um cadastro de aeroportos como um vetor de
-// ponteiros para estruturas que contêm as seguintes informações:
-//                a. Sigla: string com até 3 caracteres;
-//                b.Cidade: string com até 50 caracteres;
-//                c.Pais: string com até 30caracteres;
-//                d.Taxa: um valor real;
-//                e.Capacidade: um valor inteiro;
-// Defina uma estrutura em C com o nome de aeroporto, que tenha os campos apropriados
-// para guardar todas as informações descritas anteriormente. Defina também um novo tipo
-// de dados com o nome de Aeroporto, correspondendo a essa estrutura. Defina um vetor de
-// Aeroportos (usando alocação dinâmica para a quantidade de aeroportos) para armazenar
-// todos os aeroportos que a empresa aérea trabalha. Implementar rotinas para ler, escrever e
-// excluir registros deste tipo.
 
 
 #include <stdio.h>
@@ -25,9 +13,10 @@
 #include <string.h>
 
 typedef struct aeroporto {
-    char sigla[3];
-    char cidade[50];
-    char pais[30];
+    // Todas as strings foram colocadas com um caractere a mais, pois todas elas terminam com o caractere '\0'
+    char sigla[3 + 1]; 
+    char cidade[50 + 1];
+    char pais[30 + 1];
     float taxa;
     int capacidade;
 } Aeroporto;
@@ -37,6 +26,8 @@ void lerAeroporto(Aeroporto* aeroporto);
 void imprimirAeroportos(Aeroporto** aeroportos, int qtd_aeroportos);
 void retirarAeroportoPorIndice(Aeroporto** aeroportos, int qtd_aeroportos);
 void imprimirAlarmeFormatado(char* mensagem);
+// Essa função foi desenvolvida porque existem fgets aninhados na função lerAeroporto
+void limparCaracteresQuePassaramNoFgets(char* string_do_fgets);
 
 int main() {
     
@@ -75,7 +66,7 @@ int main() {
                 }
                 break;
 
-            // Caso o usuário queira imprimir todos os aeroportos armazenados
+            // Caso o usuário escolha imprimir todos os aeroportos armazenados
             case 2:
                 if (qtd_ponteiros_para_aeroportos == 0) {
                     imprimirAlarmeFormatado("Nao foram inseridos aeroportos!");
@@ -84,7 +75,17 @@ int main() {
                 }
                 break;
             
+            // Caso o usuário escolha retirar algum aeroporto
             case 3:
+                if (qtd_ponteiros_para_aeroportos == 0) {
+                    imprimirAlarmeFormatado("Nao foram inseridos aeroportos!");
+                } else {
+                    retirarAeroportoPorIndice(vetor_de_ponteiros_para_estruturas_aeroportos, qtd_ponteiros_para_aeroportos);
+                    // Realocando e tirando o último elemento, já que a função que foi chamada para retirar, modificou o array para que 
+                    // o que precisa ser retirado fique na última posição.
+                    vetor_de_ponteiros_para_estruturas_aeroportos = (Aeroporto**) realloc(vetor_de_ponteiros_para_estruturas_aeroportos, (qtd_ponteiros_para_aeroportos - 1) * sizeof(Aeroporto*));
+                    qtd_ponteiros_para_aeroportos -= 1;
+                }
                 break;
 
             case 4:
@@ -121,24 +122,25 @@ void imprimirQuadroOpcoes() {
 }
 
 void lerAeroporto(Aeroporto* aeroporto) {
+    getchar();
+
     printf("\n--- Inserindo um novo aeroporto ---\n");
 
-    getchar();
-
     printf("- Insira a sigla do aeroporto: ");
-    fgets(aeroporto->sigla, 3, stdin);
-    // retirando o "\n", caso a sigla tenha menos que 3 caracteres, do contrário, o próprio fgets limita e não pega o \n
+    fgets(aeroporto->sigla, sizeof(aeroporto->sigla), stdin);
+    limparCaracteresQuePassaramNoFgets(aeroporto->sigla);
+    // retirando o "\n" caso o usuário não use todos os espaços da string, pois ele armazena o '\n' caso todos os
+    // espaços não sejam ocupados.
     aeroporto->sigla[strcspn(aeroporto->sigla, "\n")] = '\0';
 
-    getchar();
-    getchar();
-
     printf("- Insira a cidade do aeroporto: ");
-    fgets(aeroporto->cidade, 50, stdin);
+    fgets(aeroporto->cidade, sizeof(aeroporto->cidade), stdin);
+    limparCaracteresQuePassaramNoFgets(aeroporto->cidade);
     aeroporto->cidade[strcspn(aeroporto->cidade, "\n")] = '\0';
 
     printf("- Insira o pais do aeroporto: ");
-    fgets(aeroporto->pais, 30, stdin);
+    fgets(aeroporto->pais, sizeof(aeroporto->pais), stdin);
+    limparCaracteresQuePassaramNoFgets(aeroporto->pais);
     aeroporto->pais[strcspn(aeroporto->pais, "\n")] = '\0';
 
     printf("- Insira a taxa do aeroporto: ");
@@ -166,11 +168,51 @@ void imprimirAeroportos(Aeroporto** aeroportos, int qtd_aeroportos) {
     printf("-----------------------------------------------------\n");
 }
 
+void retirarAeroportoPorIndice(Aeroporto** aeroportos, int qtd_aeroportos) {
+    int indice_remocao;
 
+    do {
+        printf("Insira o indice do aeroporto que deseja remover: ");
+        scanf(" %d", &indice_remocao);
 
+        if ((indice_remocao > (qtd_aeroportos - 1)) || (indice_remocao < 0)) {
+            printf("TENTE NOVAMENTE: Insira apenas valores de 0 ate %d!\n", qtd_aeroportos - 1);
+        } else {
+            imprimirAlarmeFormatado("O aeroporto foi removido com sucesso! Consulte se isso realmente aconteceu imprimindo os aeroportos!");
+
+            break;
+        }
+    } while (1);
+
+    // Liberando a memória que o ponteiro que armazena a estrutura está apontando, pois ela não vai mais ser usada
+    free(aeroportos[indice_remocao]);
+
+    int indice_vazio = indice_remocao;
+    int indice_proximo_vazio = indice_vazio + 1;
+    // Se chegou no fim da lista, ou seja, os outros elementos ocuparam o lugar dele, e se for o último elemento que vai
+    // ser apagado, não será apagado, mas quando o realloc for usado na função main, ele vai sair automaticamente, mesmo
+    // acontece caso seja um único elemento na lista, já que o realloc vai retirar ele automaticamente no main 
+    while (indice_vazio < (qtd_aeroportos - 1)) {
+        // O ponteiro anterior agora aponta para o endereço de memória do próximo
+        aeroportos[indice_vazio] = aeroportos[indice_proximo_vazio];
+        indice_vazio = indice_proximo_vazio;
+        indice_proximo_vazio += 1;
+    }
+
+}
 
 void imprimirAlarmeFormatado(char* mensagem) {
     printf("-----------------------------------------\n");
     printf("| %s\n", mensagem);
     printf("-----------------------------------------\n");
+}
+
+void limparCaracteresQuePassaramNoFgets(char* string_do_fgets) {
+    // A função strchr retorna NULL caso não exista um caractere informado
+    // Então é verificado se a string possui o '\n', caso não possua, significa que sobrou caracteres no buffers de entrada
+    // Sabendo disso, é criado uma rotina para retirar esses caracteres até chegar no '\n', que significa o final dos carac-
+    // teres que passaram no fgets.
+    if (strchr(string_do_fgets, '\n') == NULL) {
+        while (getchar() != '\n') {}
+    }
 }
