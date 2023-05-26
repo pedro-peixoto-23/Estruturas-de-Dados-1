@@ -29,7 +29,7 @@ typedef struct empregado {
 } Empregado;
 
 void imprimirQuadroOpcoes();
-void lerEmpregado(Empregado* empregado, int qtd_empregados);
+void lerEmpregado(Empregado* empregados, int qtd_empregados);
 void imprimirEmpregados(Empregado* empregados, int qtd_empregados);
 void retirarEmpregadoPorIndice(Empregado* empregados, int qtd_empregados);
 void imprimirAlarmeFormatado(char* mensagem);
@@ -120,7 +120,7 @@ void imprimirQuadroOpcoes() {
     printf(" -----------------------------------------------\n");
 }
 
-void lerEmpregado(Empregado* empregado, int qtd_empregados) {
+void lerEmpregado(Empregado* empregados, int qtd_empregados) {
     int indice = qtd_empregados - 1;
 
     printf("\n-- Inserindo um novo empregado --\n");
@@ -128,26 +128,26 @@ void lerEmpregado(Empregado* empregado, int qtd_empregados) {
     getchar();
 
     printf("- Insira o nome do empregado: ");
-    fgets(empregado[indice].nome, sizeof(empregado[indice].nome), stdin);
-    limparCaracteresQuePassaramNoFgets(empregado[indice].nome);
+    fgets(empregados[indice].nome, sizeof(empregados[indice].nome), stdin);
+    limparCaracteresQuePassaramNoFgets(empregados[indice].nome);
     // Apenas retirando o \n da string (usando o strcspn para ver o índice do \n e modificando por \0 para a string 
     // finalizar onde antes era o \n)
-    empregado[indice].nome[strcspn(empregado[indice].nome, "\n")] = '\0';
+    empregados[indice].nome[strcspn(empregados[indice].nome, "\n")] = '\0';
     
     printf("- Insira o rg do empregado: ");
-    fgets(empregado[indice].rg, sizeof(empregado[indice].rg), stdin);
-    limparCaracteresQuePassaramNoFgets(empregado[indice].rg);
+    fgets(empregados[indice].rg, sizeof(empregados[indice].rg), stdin);
+    limparCaracteresQuePassaramNoFgets(empregados[indice].rg);
     // Apenas retirando o \n, como fez no nome
-    empregado[indice].rg[strcspn(empregado[indice].rg, "\n")] = '\0';
+    empregados[indice].rg[strcspn(empregados[indice].rg, "\n")] = '\0';
 
     printf("- Insira a data de nascimento (separado por espaco, dia mes ano) do empregado: ");
-    scanf(" %d %d %d", &empregado[indice].data_nascimento.dia, &empregado[indice].data_nascimento.mes, &empregado[indice].data_nascimento.ano);
+    scanf(" %d %d %d", &empregados[indice].data_nascimento.dia, &empregados[indice].data_nascimento.mes, &empregados[indice].data_nascimento.ano);
 
     printf("- Insira a data de admissao (separado por espaco, dia mes ano) do empregado: ");
-    scanf(" %d %d %d", &empregado[indice].data_admissao.dia, &empregado[indice].data_admissao.mes, &empregado[indice].data_admissao.ano);
+    scanf(" %d %d %d", &empregados[indice].data_admissao.dia, &empregados[indice].data_admissao.mes, &empregados[indice].data_admissao.ano);
     
     printf("- Insira o salario do empregado: ");
-    scanf(" %f", &empregado[indice].salario);
+    scanf(" %f", &empregados[indice].salario);
     
     printf("----------------\n");
 

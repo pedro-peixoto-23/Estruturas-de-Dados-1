@@ -1,5 +1,4 @@
 from time import sleep
-import os
 
 texto_base = """/*
     * Função: 
@@ -28,7 +27,7 @@ sleep(1)
 for i in range(qtd_arquivos):
     porcentagem = ((i + 1) / qtd_arquivos) * 100
     print("{:.2f}% completo...".format(porcentagem))
-    with open(f"Lista {lista}/questao0{i+1}.c", "w", encoding="utf-8") as arquivo:
+    with open(f"Lista {lista}/ED-lista3-questao0{i+1}.c", "w", encoding="utf-8") as arquivo:
         arquivo.write(texto_base)  
         arquivo.close()
     sleep(0.5)
