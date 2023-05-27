@@ -27,7 +27,6 @@ int main() {
     imprimirSequenciaOsValoresDaConjecturaDeGoldbach(dois_valores_conjectura, valor_minimo, valor_maximo);
 
     free(dois_valores_conjectura);
-    getchar();
 
     return 0;
 }
