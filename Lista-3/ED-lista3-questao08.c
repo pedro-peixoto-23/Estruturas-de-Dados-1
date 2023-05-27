@@ -117,8 +117,8 @@ Complexo* complexoMultiplicar(Complexo* complexo1, Complexo* complexo2) {
 // --------------------------- = ------------------------------------------------------------- 
 // real_2 + (imaginario_2 * i)   (real_2 + (imaginario_2 * i)) * (real_2 - (imaginario_2 * i))
 // Multiplicar o numerador e o denominador pelo conjugado do denominador, chamando a função de multiplicação de complexos para fazer esse
-// trabalho. No fim, a parte imaginária será zero e iremos dividir a parte real do numerador com a parte real do denominador e a parte 
-// imaginária do numerador pela parte real do denominador.
+// trabalho. No fim, a parte imaginária do denominador será zero e iremos dividir a parte real do numerador com a parte real do denominador e a
+// parte imaginária do numerador pela parte real do denominador.
 Complexo* complexoDividir(Complexo* complexo1, Complexo* complexo2) {
     Complexo* complexo_quociente = complexoCriar(0, 0);
 
