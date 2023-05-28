@@ -1,7 +1,7 @@
 /*
-    * Função: Ordenar os elementos de um array usando o método de "QuickSort".
+    * Função: Ordenar os elementos de um array usando o método chamado "QuickSort".
     * Autor: Pedro Peixoto Viana de Oliveira.
-    * Data: 22/maio/2023.
+    * Data: 27/maio/2023.
     * Observações: 
 */
 
@@ -10,43 +10,34 @@
 #include <stdlib.h>
 #include <time.h>
 
-void preencherArrayComValoresAleatorios(int* vetor, int qtd_elementos_vetor);
-int particionarVetorQuickSort(int* vetor, int inicio, int fim);
-void ordenarVetorQuickSort(int* vetor, int inicio, int fim);
+void preencherVetorComValoresAleatorios(int* vetor, int qtd_elementos_vetor);
+int particionarVetorMetodoQuickSort(int* vetor, int inicio, int fim);
+void ordenarVetorMetodoQuickSort(int* vetor, int inicio, int fim);
+void imprimirVetor(char* mensagem, int* vetor, int qtd_elementos_vetor);
 
 
 int main() {
+
+    int qtd_elementos_vetor = 5;
+    int vetor[qtd_elementos_vetor];
+
     srand(time(NULL));
-
-    int vetor[8];
-    int tamanho_vetor = sizeof(vetor) / sizeof(vetor[0]);
-    preencherArrayComValoresAleatorios(vetor, tamanho_vetor);
-
-    printf("Array antes da funcao: ");
-    for (int i = 0; i < tamanho_vetor; i++) {
-        printf("%d ", vetor[i]);
-    }
-
-    printf("\n");
-
-    ordenarVetorQuickSort(vetor, 0, tamanho_vetor - 1);
-
-    printf("Array Depois da funcao: ");
-    for (int i = 0; i < tamanho_vetor; i++) {
-        printf("%d ", vetor[i]);
-    }
+    preencherVetorComValoresAleatorios(vetor, qtd_elementos_vetor);
+    imprimirVetor("Vetor antes da ordenacao: ", vetor, qtd_elementos_vetor);
+    ordenarVetorMetodoQuickSort(vetor, 0, qtd_elementos_vetor - 1);
+    imprimirVetor("Vetor depois da ordenacao: ", vetor, qtd_elementos_vetor);
 
     return 0;
 }
 
-void preencherArrayComValoresAleatorios(int* vetor, int qtd_elementos_vetor) {
+void preencherVetorComValoresAleatorios(int* vetor, int qtd_elementos_vetor) {
     for (int i = 0; i < qtd_elementos_vetor; i++) {
         int valor = rand() % 50;
         vetor[i] = valor;
     }
 }
 
-int particionarVetorQuickSort(int* vetor, int inicio, int fim) {
+int particionarVetorMetodoQuickSort(int* vetor, int inicio, int fim) {
     // Definindo o elemento base.
     int indice_elemento_base = (inicio + fim) / 2; // Retorna o índice central, caso seja par, arredonda para baixo.
     int elemento_base = vetor[indice_elemento_base];
@@ -84,15 +75,28 @@ int particionarVetorQuickSort(int* vetor, int inicio, int fim) {
         }
     }
 
+    // Mudando o novo índice do elemento base, que agora será o ponteiro (esquerdo - 1), pois o ponteiro está um índice na frente do elem. base.
+    indice_elemento_base = ponteiro_esquerdo - 1;
+
     // Retornando o índice novo do elemento base.
-    return ponteiro_esquerdo;
+    return indice_elemento_base;
 }
 
-void ordenarVetorQuickSort(int* vetor, int inicio, int fim) {
+void ordenarVetorMetodoQuickSort(int* vetor, int inicio, int fim) {
     int indice_elemento_base;
     if (fim > inicio) {
-        indice_elemento_base = particionarVetorQuickSort(vetor, inicio, fim);
-        ordenarVetorQuickSort(vetor, inicio, indice_elemento_base - 1);
-        ordenarVetorQuickSort(vetor, indice_elemento_base, fim);
+        indice_elemento_base = particionarVetorMetodoQuickSort(vetor, inicio, fim);
+        // Ordenando as duas metades
+        ordenarVetorMetodoQuickSort(vetor, inicio, indice_elemento_base);
+        ordenarVetorMetodoQuickSort(vetor, indice_elemento_base + 1, fim);
     }    
+}
+
+void imprimirVetor(char* mensagem, int* vetor, int qtd_elementos_vetor) {
+    printf("%s\t", mensagem);
+    printf("[");
+    for (int i = 0; i < qtd_elementos_vetor; i++) {
+        printf(" %d", vetor[i]);
+    }
+    printf(" ]\n");
 }
