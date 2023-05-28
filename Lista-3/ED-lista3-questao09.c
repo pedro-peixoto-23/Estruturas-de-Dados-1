@@ -1,6 +1,6 @@
 /*
     * Função: Ordenar os elementos de um array usando o método chamado "BubbleSort".
-    * Autor: Pedro Peixoto Viana de Oliveira
+    * Autor: Pedro Peixoto Viana de Oliveira.
     * Data: 28/maio/2023
     * Observações: 
 */
